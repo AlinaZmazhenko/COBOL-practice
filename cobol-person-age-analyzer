@@ -1,0 +1,79 @@
+IDENTIFICATION DIVISION.
+PROGRAM-ID. OSOBY-IMIE-WIEK.
+
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+
+01 I         PIC 9 VALUE 1.
+01 SUMA      PIC 999 VALUE 0.
+01 SREDNIA   PIC 99V9(2).
+01 ILOSC     PIC 9 VALUE 5.
+
+01 IMIONA.
+   05 IMIE-TABLICA OCCURS 5 TIMES.
+      10 IMIE-OSOBY PIC A(20).
+
+01 WIEKI.
+   05 WIEK-TABLICA OCCURS 5 TIMES.
+      10 WIEK-WARTOSC PIC 99.
+01 LICZNIK-PELNO PIC 9 VALUE 0.
+01 NAJMLODSZY-WIEK PIC 99 VALUE 99.
+01 NAJSTARSZY-WIEK PIC 99 VALUE 0.
+01 NAJMLODSZY-INDEX PIC 9 VALUE 1.
+01 NAJSTARSZY-INDEX PIC 9 VALUE 1.
+
+PROCEDURE DIVISION.
+
+PERFORM VARYING I FROM 1 BY 1 UNTIL I > ILOSC
+    DISPLAY "Podaj imię nr " I ":"
+    ACCEPT IMIE-OSOBY(I)
+END-PERFORM.
+DISPLAY "---------------------------------------------------------------------------".
+
+
+PERFORM VARYING I FROM 1 BY 1 UNTIL I > ILOSC
+    DISPLAY "Podaj wiek osoby " I ":"
+    ACCEPT WIEK-WARTOSC(I)
+    ADD WIEK-WARTOSC(I) TO SUMA
+END-PERFORM.
+DISPLAY "---------------------------------------------------------------------------".
+
+PERFORM VARYING I FROM 1 BY 1 UNTIL I > ILOSC
+IF WIEK-WARTOSC(I) >= 18 THEN
+ADD 1 TO LICZNIK-PELNO
+DISPLAY IMIE-OSOBY(I) "-" WIEK-WARTOSC(I) " lat - pełnoletnia"
+ELSE
+DISPLAY IMIE-OSOBY(I) "-" WIEK-WARTOSC(I) " lat - niepełnoletnia"
+END-IF
+END-PERFORM.
+DISPLAY "---------------------------------------------------------------------------".
+
+DISPLAY "Osoby niepełnoletnie:".
+PERFORM VARYING I FROM 1 BY 1 UNTIL I > ILOSC
+IF WIEK-WARTOSC(I) < 18 THEN
+DISPLAY IMIE-OSOBY(I) "-" WIEK-WARTOSC(I) " lat - NIEpełnoletnia"
+END-IF
+END-PERFORM.
+
+PERFORM VARYING I FROM 1 BY 1 UNTIL I > ILOSC
+IF WIEK-WARTOSC(I) < NAJMLODSZY-WIEK THEN
+MOVE WIEK-WARTOSC(I) TO NAJMLODSZY-WIEK
+MOVE I TO NAJMLODSZY-INDEX
+END-IF
+
+IF WIEK-WARTOSC(I) > NAJSTARSZY-WIEK THEN
+MOVE WIEK-WARTOSC(I) TO NAJSTARSZY-WIEK
+MOVE I TO NAJSTARSZY-INDEX
+END-IF
+END-PERFORM.
+DISPLAY "---------------------------------------------------------------------------".
+DISPLAY "Najmlodsza osoba:" IMIE-OSOBY(NAJMLODSZY-INDEX) "-"  NAJMLODSZY-WIEK " lat".
+DISPLAY "Najstarsza osoba:" IMIE-OSOBY(NAJSTARSZY-INDEX) "-"  NAJSTARSZY-WIEK " lat".
+
+DISPLAY "---------------------------------------------------------------------------".
+DISPLAY "Liczba pełnoletnich osób:" LICZNIK-PELNO.
+DISPLAY "---------------------------------------------------------------------------".
+COMPUTE SREDNIA = SUMA / ILOSC.
+DISPLAY "Średni wiek to: " SREDNIA.
+
+STOP RUN.
